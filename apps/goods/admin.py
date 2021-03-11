@@ -1,5 +1,5 @@
 from django.contrib import admin
-from goods.models import *
+from ..goods.models import *
 from django.core.cache import cache
 
 
@@ -12,7 +12,7 @@ class BaseModelAdmin(admin.ModelAdmin):
         generate_static_index_html()
 
         # 清除缓存
-        cache.delete('index_page_data')
+        # cache.delete('index_page_data')
 
     def delete_model(self, request, obj):
         """
@@ -26,7 +26,7 @@ class BaseModelAdmin(admin.ModelAdmin):
         generate_static_index_html()
 
         # 清除缓存
-        cache.delete('index_page_data')
+        # cache.delete('index_page_data')
 
 
 @admin.register(Goods)

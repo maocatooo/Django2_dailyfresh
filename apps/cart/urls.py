@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from cart.views import *
+from apps.cart.views import *
 
 urlpatterns = [
     path('', CartInfoView.as_view(), name='show'),  # 购物车页面显示

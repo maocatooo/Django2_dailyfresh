@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.conf import settings
 from django.views.generic import View
 from django_redis import get_redis_connection
-from user.models import Address
-from goods.models import GoodsSKU
-from order.models import OrderInfo, OrderGoods
+from apps.user.models import Address
+from apps.goods.models import GoodsSKU
+from apps.order.models import OrderInfo, OrderGoods
 from utils.mixin import LoginRequiredMixin
 from datetime import datetime
 from alipay import AliPay

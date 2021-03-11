@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django_redis import get_redis_connection
 from django.core.cache import cache
-from goods.models import *
-from order.models import OrderGoods
-from django.views.generic import View
 
+from django.views.generic import View
+from apps.goods.models import *
+from apps.order.models import OrderGoods
 
 # Create your views here.
 # 127.0.0.1:8000/
@@ -17,7 +17,8 @@ from django.views.generic import View
 class IndexView(View):
     def get(self, request):
         # 尝试从缓存中获取数据
-        context = cache.get('index_page_data')
+        # context = cache.get('index_page_data')
+        context = None
         # print(context)
         if context is None:
             # print('设置缓存----------------------------')  # debug info
@@ -43,7 +44,7 @@ class IndexView(View):
                        'promotion_banners': promotion_banners}
             # 设置缓存
             # key  value timeout
-            cache.set('index_page_data', context, 3600)
+            # cache.set('index_page_data', context, 3600)
 
         # 获取用户购物车中商品的数目
         user = request.user

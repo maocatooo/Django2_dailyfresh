@@ -10,7 +10,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Django2_dailyfresh.settings')
 django.setup()
 
-from goods.models import *
+from apps.goods.models import *
 from django_redis import get_redis_connection
 
 app = Celery('celery_tasks.tasks', broker='redis://127.0.0.1:6379/0')

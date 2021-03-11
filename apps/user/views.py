@@ -9,9 +9,9 @@ from django_redis import get_redis_connection
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 
-from order.models import OrderInfo, OrderGoods
-from user.models import User, Address
-from goods.models import GoodsSKU
+from apps.order.models import OrderInfo, OrderGoods
+from apps.user.models import User, Address
+from apps.goods.models import GoodsSKU
 from celery_tasks.tasks import send_register_active_email
 from utils.mixin import LoginRequiredMixin
 import re

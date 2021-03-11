@@ -1,5 +1,5 @@
 from haystack import indexes
-from goods.models import GoodsSKU
+from apps.goods.models import GoodsSKU
 
 
 class GoodsSKUIndex(indexes.SearchIndex, indexes.Indexable):
