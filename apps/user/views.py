@@ -168,7 +168,10 @@ class UserInfoView(LoginRequiredMixin, View):
         sku_ids = con.lrange(history_key, 0, 4)
         goods_li = []
         for id in sku_ids:
-            goods = GoodsSKU.objects.get(id=id)
+            goods = GoodsSKU.objects.filter(id=id).first()
+            if not goods:
+                continue
+
             goods_li.append(goods)
 
         # 组织上下文
@@ -261,7 +264,7 @@ class AddressView(LoginRequiredMixin, View):
         default_address = Address.objects.get_default_address(user)
 
         all_address = Address.objects.get_all_address(user)
-
+        print(all_address)
         # 组织模板上下文
         context = {
             'address': default_address,

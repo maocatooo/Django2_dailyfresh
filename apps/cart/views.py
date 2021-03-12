@@ -91,7 +91,9 @@ class CartInfoView(LoginRequiredMixin, View):
             count = count.decode()
             
             # 根据商品的id获取商品的信息
-            sku = GoodsSKU.objects.get(id=sku_id)
+            sku = GoodsSKU.objects.filter(id=sku_id).first()
+            if not sku:
+                continue
             # 计算商品的小计
             amount = sku.price * int(count)
             # 动态给sku对象增加一个属性amount，保存商品的小计

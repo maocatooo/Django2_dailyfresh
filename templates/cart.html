@@ -29,7 +29,7 @@
 			</div>
 		</li>
 		<li class="col07">{{ sku.amount }}元</li>
-		<li class="col08"><a href="javascript:;">删除</a></li>
+		<li class="col08" ><a href="javascript:;" sku_id="{{ sku.id }}">删除</a></li>
 	</ul>
 	{% endfor %}
 
@@ -128,7 +128,7 @@
             // 发起ajax post请求，访问/cart/update, 传递参数: sku_id count
             $.post('/cart/update', params, function (data) {
                 // alert('3');
-                if (data.res == 5) {
+                if (data.res === 5) {
                     // 更新成功
                     update_error = false;
                     cart_count = data.total_count;

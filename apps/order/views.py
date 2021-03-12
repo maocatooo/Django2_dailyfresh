@@ -10,8 +10,6 @@ from apps.goods.models import GoodsSKU
 from apps.order.models import OrderInfo, OrderGoods
 from utils.mixin import LoginRequiredMixin
 from datetime import datetime
-from alipay import AliPay
-import os
 
 
 # /order/place
@@ -216,37 +214,31 @@ class OrderPayView(View):
                                           order_status=1)
         except OrderInfo.DoesNotExist:
             return JsonResponse({'res': 2, 'errmsg': '订单错误'})
-        
+        total_pay = order.total_price + order.transit_price
         # app_private_key_string = open(os.path.join(settings.BASE_DIR, 'apps\\order\\app_private_key.pem')).read()
         # alipay_public_key_string = open(os.path.join(settings.BASE_DIR, 'apps\\order\\alipay_public_key.pem')).read()
         app_private_key_string = open(settings.APP_PRIVATE_KEY_PATH).read()
         alipay_public_key_string = open(settings.ALIPAY_PUBLIC_KEY_PATH).read()
-        # 业务处理：使用Python sdk调用支付宝的支付接口
-        # 初始化
-        alipay = AliPay(
-            appid=settings.ALIPAY_APP_ID,  # 应用id
-            app_notify_url=None,  # 默认回调url
-            app_private_key_string=app_private_key_string,
-            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            alipay_public_key_string=alipay_public_key_string,
-            sign_type="RSA2",  # RSA 或者 RSA2
-            debug=True  # 默认False True就会访问沙箱地址
-        )
-        
-        # 调用支付接口
-        # 电脑网站支付，需要跳转到https://openapi.alipaydev.com/gateway.do? + order_string
-        total_pay = order.total_price + order.transit_price  # Decimal格式
-        order_string = alipay.api_alipay_trade_page_pay(
-            out_trade_no=order_id,  # 订单id
-            total_amount=str(total_pay),
-            subject='天天生鲜%s' % order_id,
-            return_url=None,
-            notify_url=None  # 可选, 不填则使用默认notify url
-        )
-        
+
+        #
+        # # 调用支付接口
+        # # 电脑网站支付，需要跳转到https://openapi.alipaydev.com/gateway.do? + order_string
+        # total_pay = order.total_price + order.transit_price  # Decimal格式
+        # order_string = alipay.api_alipay_trade_page_pay(
+        #     out_trade_no=order_id,  # 订单id
+        #     total_amount=str(total_pay),
+        #     subject='天天生鲜%s' % order_id,
+        #     return_url=None,
+        #     notify_url=None  # 可选, 不填则使用默认notify url
+        # )
+        #
+        from .help import run
         # 返回应答
-        pay_url = settings.ALIPAY_GATEWAY_URL + order_string
-        return JsonResponse({'res': 3, 'pay_url': pay_url})
+        # print(order_string)
+        response = settings.ALIPAY_GATEWAY_URL + run(order_id, total_pay)
+        pay_url = ''
+        print(response)
+        return JsonResponse({'res': 3, 'pay_url': response})
 
 
 # ajax post
@@ -267,14 +259,14 @@ class CheckPayView(View):
         
         # 校验参数
         if not order_id:
-            print(order_id)
+
             return JsonResponse({'res': 1, 'errmsg': '无效的订单id'})
         try:
             order = OrderInfo.objects.get(order_id=order_id,
                                           user=user,
                                           pay_method=3,
                                           order_status=1)
-            print(order)
+
         except OrderInfo.DoesNotExist:
             return JsonResponse({'res': 2, 'errmsg': '订单错误'})
         
@@ -282,8 +274,9 @@ class CheckPayView(View):
         alipay_public_key_string = open(settings.ALIPAY_PUBLIC_KEY_PATH).read()
         # 业务处理：使用Python sdk调用支付宝的支付接口
         # 初始化
+        return JsonResponse({'res': 4, 'errmsg': '支付失败'})
         alipay = AliPay(
-            appid="2016102200735309",  # 应用id
+            appid=settings.ALIPAY_APP_ID,  # 应用id
             app_notify_url=None,  # 默认回调url
             app_private_key_string=app_private_key_string,
             # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
@@ -295,7 +288,7 @@ class CheckPayView(View):
         # 调用支付宝交易查询接口
         while True:
             response = alipay.api_alipay_trade_query(order_id)
-            
+
             """
                 响应参数
                 response = {              
@@ -321,7 +314,7 @@ class CheckPayView(View):
                     "total_amount": "20.00"
                 }
              """
-            
+
             code = response.get('code')
             
             if code == '10000' and response.get('trade_status') == 'TRADE_SUCCESS':
@@ -339,7 +332,7 @@ class CheckPayView(View):
                 # 业务处理失败，可能一会就会成功
                 import time
                 time.sleep(5)
-                continue
+                break
             else:
                 # 支付出错
                 return JsonResponse({'res': 4, 'errmsg': '支付失败'})

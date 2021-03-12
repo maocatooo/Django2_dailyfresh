@@ -197,7 +197,7 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # 支付宝沙箱APP_ID
-ALIPAY_APP_ID = '沙箱app id'
+ALIPAY_APP_ID = '2016091400510193'
 
 # 支付宝网站回调url地址
 ALIPAY_APP_NOTIFY_URL = None

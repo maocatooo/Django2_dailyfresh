@@ -92,6 +92,7 @@ class DetailView(View):
         if user.is_authenticated:
             # 用户已登录
             conn = get_redis_connection('default')
+
             cart_key = 'cart_%d' % user.id
             cart_count = conn.hlen(cart_key)
 
