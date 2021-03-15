@@ -29,10 +29,10 @@ subject = "测试订单"
 
 # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
 order_string = alipay.api_alipay_trade_page_pay(
-    out_trade_no="2088102175609058",
+    out_trade_no="20881021756090581",
     total_amount=0.01,
     subject=subject,
-    return_url="https://example.com",
+    return_url="http://127.0.0.1:8000",
     notify_url="https://example.com/notify" # 可选, 不填则使用默认notify url
 )
 
