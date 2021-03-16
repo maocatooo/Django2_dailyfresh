@@ -209,7 +209,7 @@ class UserOrderView(LoginRequiredMixin, View):
             order.order_skus = order_skus
 
         # 分页
-        paginator = Paginator(orders, 1)
+        paginator = Paginator(orders, 10)
 
         # 获取第page页的内容
         try:
@@ -238,7 +238,7 @@ class UserOrderView(LoginRequiredMixin, View):
         else:
             pages = range(page - 2, page + 3)
 
-        print(order_page)
+        # print(order_page)
         # 组织上下文
         context = {'order_page': order_page,
                    'pages': pages,
@@ -264,7 +264,7 @@ class AddressView(LoginRequiredMixin, View):
         default_address = Address.objects.get_default_address(user)
 
         all_address = Address.objects.get_all_address(user)
-        print(all_address)
+        # print(all_address)
         # 组织模板上下文
         context = {
             'address': default_address,

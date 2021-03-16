@@ -215,29 +215,9 @@ class OrderPayView(View):
         except OrderInfo.DoesNotExist:
             return JsonResponse({'res': 2, 'errmsg': '订单错误'})
         total_pay = order.total_price + order.transit_price
-        # app_private_key_string = open(os.path.join(settings.BASE_DIR, 'apps\\order\\app_private_key.pem')).read()
-        # alipay_public_key_string = open(os.path.join(settings.BASE_DIR, 'apps\\order\\alipay_public_key.pem')).read()
-        app_private_key_string = open(settings.APP_PRIVATE_KEY_PATH).read()
-        alipay_public_key_string = open(settings.ALIPAY_PUBLIC_KEY_PATH).read()
-
-        #
-        # # 调用支付接口
-        # # 电脑网站支付，需要跳转到https://openapi.alipaydev.com/gateway.do? + order_string
-        # total_pay = order.total_price + order.transit_price  # Decimal格式
-        # order_string = alipay.api_alipay_trade_page_pay(
-        #     out_trade_no=order_id,  # 订单id
-        #     total_amount=str(total_pay),
-        #     subject='天天生鲜%s' % order_id,
-        #     return_url=None,
-        #     notify_url=None  # 可选, 不填则使用默认notify url
-        # )
-        #
         from .help import run
-        # 返回应答
-        # print(order_string)
-        response = settings.ALIPAY_GATEWAY_URL + run(order_id, total_pay)
-        pay_url = ''
-        print(response)
+        response = run(order_id, total_pay)
+
         return JsonResponse({'res': 3, 'pay_url': response})
 
 
@@ -270,72 +250,8 @@ class CheckPayView(View):
         except OrderInfo.DoesNotExist:
             return JsonResponse({'res': 2, 'errmsg': '订单错误'})
         
-        app_private_key_string = open(settings.APP_PRIVATE_KEY_PATH).read()
-        alipay_public_key_string = open(settings.ALIPAY_PUBLIC_KEY_PATH).read()
-        # 业务处理：使用Python sdk调用支付宝的支付接口
-        # 初始化
-        return JsonResponse({'res': 4, 'errmsg': '支付失败'})
-        alipay = AliPay(
-            appid=settings.ALIPAY_APP_ID,  # 应用id
-            app_notify_url=None,  # 默认回调url
-            app_private_key_string=app_private_key_string,
-            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            alipay_public_key_string=alipay_public_key_string,
-            sign_type="RSA2",  # RSA 或者 RSA2
-            debug=True  # 默认False True就会访问沙箱地址
-        )
-        
-        # 调用支付宝交易查询接口
-        while True:
-            response = alipay.api_alipay_trade_query(order_id)
-
-            """
-                响应参数
-                response = {              
-                    "trade_no": "2019092121001004070200176844", # 支付宝交易号
-                    "code": "10000", # 接口调用是否成功
-                    "invoice_amount": "20.00",
-                    "open_id": "20880072506750308812798160715407",
-                    "fund_bill_list": [
-                      {
-                        "amount": "20.00",
-                        "fund_channel": "ALIPAYACCOUNT"
-                      }
-                    ],
-                    "buyer_logon_id": "csq***@sandbox.com",
-                    "send_pay_date": "2019-09-21 13:29:17",
-                    "receipt_amount": "20.00",
-                    "out_trade_no": "out_trade_no15",
-                    "buyer_pay_amount": "20.00",
-                    "buyer_user_id": "2088102169481075",
-                    "msg": "Success",
-                    "point_amount": "0.00",
-                    "trade_status": "TRADE_SUCCESS", # 支付结果
-                    "total_amount": "20.00"
-                }
-             """
-
-            code = response.get('code')
-            
-            if code == '10000' and response.get('trade_status') == 'TRADE_SUCCESS':
-                # 支付成功
-                # 获取支付宝交易号
-                trade_no = response.get('trade_no')
-                # 更新订单状态
-                order.trade_no = trade_no
-                order.order_status = 4  # 待评价状态
-                order.save()
-                # 返回结果
-                return JsonResponse({'res': 3, 'message': '支付成功'})
-            elif code == '40004' or (code == '10000' and response.get('trade_status') == 'WAIT_BUYER_PAY'):
-                # 等待卖家付款
-                # 业务处理失败，可能一会就会成功
-                import time
-                time.sleep(5)
-                break
-            else:
-                # 支付出错
-                return JsonResponse({'res': 4, 'errmsg': '支付失败'})
+        from .help import check
+        return check(order, order_id)
 
 
 class CommentView(LoginRequiredMixin, View):
