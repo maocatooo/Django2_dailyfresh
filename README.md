@@ -165,6 +165,9 @@ python manage.py createsuperuser
 python manage.py createcachetable
 # 启动服务
 python manage.py runserver
+# 简历索引
+python manage.py rebuild_index
+
 ```
 # 效果图
 ![首页效果图](docs/mdImages/index.png)

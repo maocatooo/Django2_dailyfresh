@@ -208,10 +208,14 @@ class OrderPayView(View):
             return JsonResponse({'res': 1, 'errmsg': '无效的订单id'})
         
         try:
-            order = OrderInfo.objects.get(order_id=order_id,
-                                          user=user,
-                                          pay_method=3,
-                                          order_status=1)
+            print(order_id)
+            order = OrderInfo.objects.filter(order_id=order_id,
+                                             user=user,
+                                             # pay_method=3,
+                                             order_status=1).first()
+            print(order)
+            if not order:
+                return JsonResponse({'res': 2, 'errmsg': '订单错误'})
         except OrderInfo.DoesNotExist:
             return JsonResponse({'res': 2, 'errmsg': '订单错误'})
         total_pay = order.total_price + order.transit_price
@@ -244,7 +248,7 @@ class CheckPayView(View):
         try:
             order = OrderInfo.objects.get(order_id=order_id,
                                           user=user,
-                                          pay_method=3,
+                                          # pay_method=3,
                                           order_status=1)
 
         except OrderInfo.DoesNotExist:
