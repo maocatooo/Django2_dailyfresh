@@ -83,7 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dailyfresh',
-        'HOST': '127.0.0.1',
+        'HOST': '192.168.223.130',
         'PORT': '3306',
         'USER': 'root',  # 数据库用户名
         'PASSWORD': '123',  # 数据库密码
@@ -206,10 +206,10 @@ ALIPAY_APP_NOTIFY_URL = None
 ALIPAY_APP_RETURN_URL = 'http://127.0.0.1:8000/order/check'
 
 # 网站私钥文件路径
-APP_PRIVATE_KEY_PATH = os.path.join(BASE_DIR, 'apps/order/app_private_key.pem')
+APP_PRIVATE_KEY_PATH = os.path.join(BASE_DIR, 'apps', 'order',  'apk')
 
 # 支付宝公钥文件路径
-ALIPAY_PUBLIC_KEY_PATH = os.path.join(BASE_DIR, 'apps/order/alipay_public_key.pem')
+ALIPAY_PUBLIC_KEY_PATH = os.path.join(BASE_DIR, 'apps', 'order',  'ali_public_key.pem')
 
 # 支付宝支付的开发模式
 ALIPAY_DEBUG = True

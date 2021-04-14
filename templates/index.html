@@ -5,6 +5,29 @@
 	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/slide.js' %}"></script>
+    <style>
+     .adv img {
+         height: 100%;
+
+     }
+    .goods_banner img {
+
+        width: 100%;
+        height: 100%;
+    }
+    .slide img{
+        {#width: 100%;#}
+        height: 100%;
+        position: relative;
+
+        left: 50%;
+
+        top: 50%;
+
+        transform: translate(-50%,-50%);
+
+    }
+    </style>
 {% endblock topfiles %}
 {% block body %}
 	<div class="navbar_con">
@@ -53,7 +76,7 @@
 				    <a href="{% url 'goods:detail' banner.sku.id  %}">{{ banner.sku.name }}</a>
 				{% endfor %}
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/{{ type.id }}/1" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
