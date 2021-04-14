@@ -11,7 +11,7 @@
 fork 自 https://github.com/Pad0y/Django2_dailyfresh
 
 
-大部分提交在码云上完成
+大部分提交在码云上完成，因为网络问题没同步更新到github
 
 
 修改如下：
@@ -23,7 +23,7 @@ fork 自 https://github.com/Pad0y/Django2_dailyfresh
 
 * 修改了全文搜索 并且在网上找了早期别人开发的 whoosh_index 包
 
-* （接口调试直接报错）修改了小部门源码
+* （接口调试直接报错）修改了小部分源码
 
 * 为了一个人情帮人弄这种是真的累
 
